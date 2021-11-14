@@ -1,0 +1,32 @@
+.candidate {
+  display: flex;
+  gap: 6vw;
+  min-width: 45vw;
+}
+
+.image {
+  height: 250px;
+  width: 250px;
+  border-radius: 3px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  height: 250px;
+  justify-content: space-between;
+  padding: 2vh 0;
+  box-sizing: border-box;
+}
+
+.details-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3vh;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  gap: 2vw;
+}

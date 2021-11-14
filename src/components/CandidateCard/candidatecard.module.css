@@ -1,0 +1,36 @@
+.card {
+  display: flex;
+  gap: 2vw;
+  padding: 10px 6px;
+  border-radius: 3px;
+  border: 1px solid #eee;
+  background-color: #47a3ff;
+  cursor: pointer;
+  width: 35vw;
+}
+
+.shortlisted {
+  background-color: #5bc989;
+}
+
+.rejected {
+  background-color: #e68e8e;
+}
+
+.image {
+  height: 80px;
+  width: 80px;
+  border-radius: 2px;
+  box-shadow: 2px 2px 2px 0px #000;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.id {
+  color: #0c47ad;
+  font-size: 0.9rem;
+}
