@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
-import {
-  CandidateActionTypes,
-  useCandidateContext,
-} from "../../contexts/useCandidateContext";
+import { State, useActions } from "../../state";
+
 import styles from "./candidate.module.css";
 
 const Candidate = () => {
+  const { currentCandidate, shortlisted, rejected } = useSelector(
+    (state: State) => state.candidates
+  );
   const {
-    state: { shortlisted, rejected, currentCandidate },
-    dispatch,
-  } = useCandidateContext();
+    selectCandidate,
+    resetCurrentCandidate,
+    rejectCandidate,
+    shortlistCandidate,
+    deleteCandidateFromRejected,
+    deleteCandidateFromShortlist,
+  } = useActions();
   const params = useParams();
   const navigate = useNavigate();
   const [inShortlist, setInShortlist] = useState(false);
@@ -18,19 +24,14 @@ const Candidate = () => {
 
   useEffect(() => {
     if (!currentCandidate && params.id) {
-      dispatch({
-        type: CandidateActionTypes.SET_CURRENT_CANDIDATE,
-        id: params.id,
-      });
+      selectCandidate(params.id);
     }
 
     // Reset current candidate on page unmounting
     return () => {
-      dispatch({
-        type: CandidateActionTypes.RESET_CURRENT_CANDIDATE,
-      });
+      resetCurrentCandidate();
     };
-  }, [dispatch]);
+  }, []);
 
   // Update document title based on candidate name
   useEffect(() => {
@@ -56,44 +57,32 @@ const Candidate = () => {
     }
   }, []);
 
-  const shortListCandidate = () => {
+  const shortlistCurrentCandidate = () => {
     if (params.id) {
-      /** 
+      /**
        * If candidate was rejected earlier, candidate has to be
        * removed from rejected list before shortlisting
-       * */ 
+       * */
       if (inRejected) {
-        dispatch({
-          type: CandidateActionTypes.DELETE_FROM_REJECTED,
-          id: params.id,
-        });
+        deleteCandidateFromRejected(params.id);
       }
-      dispatch({
-        type: CandidateActionTypes.SHORTLIST_CANDIDATE,
-        id: params.id,
-      });
+      shortlistCandidate(params.id);
     }
     navigate("/", {
       replace: true,
     });
   };
 
-  const rejectCandidate = () => {
+  const rejectCurrentCandidate = () => {
     if (params.id) {
-      /** 
+      /**
        * If candidate was shortlisted earlier, candidate has to be
        * removed from shortlisted list before rejecting
-       * */ 
+       * */
       if (inShortlist) {
-        dispatch({
-          type: CandidateActionTypes.DELETE_FROM_SHORTLIST,
-          id: params.id,
-        });
+        deleteCandidateFromShortlist(params.id);
       }
-      dispatch({
-        type: CandidateActionTypes.REJECT_CANDIDATE,
-        id: params.id,
-      });
+      rejectCandidate(params.id);
     }
     navigate("/", {
       replace: true,
@@ -115,14 +104,14 @@ const Candidate = () => {
         <span className={styles.buttons}>
           <button
             className="btn btn-success"
-            onClick={shortListCandidate}
+            onClick={shortlistCurrentCandidate}
             disabled={inShortlist}
           >
             {inShortlist ? "Shortlisted!" : "Shortlist"}
           </button>
           <button
             className="btn btn-danger"
-            onClick={rejectCandidate}
+            onClick={rejectCurrentCandidate}
             disabled={inRejected}
           >
             {inRejected ? "Rejected!" : "Reject"}

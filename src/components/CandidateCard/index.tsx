@@ -1,10 +1,7 @@
 import { useLocation } from "react-router";
 import { useNavigate } from "react-router";
-import {
-  CandidateActionTypes,
-  useCandidateContext,
-} from "../../contexts/useCandidateContext";
 import { Candidate } from "../../pages/CandidateList/candidate.model";
+import { useActions } from "../../state";
 import styles from "./candidatecard.module.css";
 
 type CandidateCardProps = {
@@ -20,23 +17,21 @@ const CandidateCard = ({
 }: CandidateCardProps) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { dispatch } = useCandidateContext();
+  const { selectCandidate } = useActions();
 
-  const selectCandidate = () => {
-    dispatch({
-      type: CandidateActionTypes.SET_CURRENT_CANDIDATE,
-      id,
-    });
+  const selectCurrentCandidate = () => {
+    selectCandidate(id);
     if (pathname.substr(1) === "") {
       navigate(id);
     }
   };
+
   return (
     <article
       className={`${styles.card} ${shortlisted && styles.shortlisted} ${
         rejected && styles.rejected
       }`}
-      onClick={selectCandidate}
+      onClick={selectCurrentCandidate}
     >
       <img src={Image} alt={name} className={styles.image} />
       <section className={styles.details}>

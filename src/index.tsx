@@ -3,13 +3,15 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { CandidateProvider } from "./contexts/useCandidateContext";
+import { Provider } from "react-redux";
+import { store } from "./state";
+// import { CandidateProvider } from "./contexts/useCandidateContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <CandidateProvider>
+    <Provider store={store}>
       <App />
-    </CandidateProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );
