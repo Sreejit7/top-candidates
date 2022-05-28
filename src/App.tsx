@@ -3,18 +3,18 @@ import "./App.css";
 import CandidateList from "./pages/CandidateList";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Candidate from "./pages/Candidate";
-import {
-  CandidateActionTypes,
-  useCandidateContext,
-} from "./contexts/useCandidateContext";
+
 import Header from "./components/Header";
 import DocumentTitle from "./components/DocumentTitle";
+import { useActions, State } from "./state";
+import { useSelector } from "react-redux";
 
 function App() {
-  const {
-    state: { candidates, shortlisted, rejected },
-    dispatch,
-  } = useCandidateContext();
+  const { setCandidates } = useActions();
+  const { candidates, rejected, shortlisted } = useSelector(
+    (state: State) => state.candidates
+  );
+
   useEffect(() => {
     const getCandidatesList = () => {
       fetch(
@@ -22,18 +22,16 @@ function App() {
       )
         .then((response: Response) => response.json())
         .then((data) => {
-          dispatch({
-            type: CandidateActionTypes.SET_CANDIDATES,
-            candidates: data,
-          });
+          setCandidates(data);
         });
     };
     getCandidatesList();
   }, []);
+
   return (
     <>
       <Router>
-        <DocumentTitle/>
+        <DocumentTitle />
         <Header />
         <main className="page">
           <Routes>
